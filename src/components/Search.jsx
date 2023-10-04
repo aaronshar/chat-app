@@ -38,22 +38,52 @@ const Search = () => {
             if(!res.exists()){
                 await setDoc(doc(db, "chats", combinedId), { messages: [] })
 
+                await setDoc(doc(db, "userChats", currentUser.uid),{
+                    [combinedId]:{
+                        userInfo: {
+                            uid: user.uid,
+                            displayName: user.displayName,
+                            photoURL: user.photoURL
+                        
+                        },
+                        date: serverTimestamp()
+                    }
+            
+                })
+
+                await setDoc(doc(db, "userChats", user.uid),{
+                    [combinedId]:{
+                        userInfo: {
+                            uid: currentUser.uid,
+                            displayName: currentUser.displayName,
+                            photoURL: currentUser.photoURL
+                        },
+                        date: serverTimestamp()
+                    }
+                })
+            } else{
                 await updateDoc(doc(db, "userChats", currentUser.uid),{
-                    [combinedId+".userInfo"]: {
-                        uid: user.uid,
-                        displayName: user.displayName,
-                        photoURL: user.photoURL
-                    },
-                    [combinedId+".date"]: serverTimestamp()
+                    [combinedId]:{
+                        userInfo: {
+                            uid: user.uid,
+                            displayName: user.displayName,
+                            photoURL: user.photoURL
+                        
+                        },
+                        date: serverTimestamp()
+                    }
+            
                 })
 
                 await updateDoc(doc(db, "userChats", user.uid),{
-                    [combinedId+".userInfo"]: {
-                        uid: currentUser.uid,
-                        displayName: currentUser.displayName,
-                        photoURL: currentUser.photoURL
-                    },
-                    [combinedId+".date"]: serverTimestamp()
+                    [combinedId]:{
+                        userInfo: {
+                            uid: currentUser.uid,
+                            displayName: currentUser.displayName,
+                            photoURL: currentUser.photoURL
+                        },
+                        date: serverTimestamp()
+                    }
                 })
             }
 
